@@ -1,0 +1,65 @@
+<style type="text/css">
+body, td {
+   font-size: 12px;
+}
+code.r{
+  font-size: 8px;
+}
+pre {
+  font-size: 8px;  
+}
+pre code {
+  font-size: 8px;
+}
+code {
+  font-size: 8px;
+}
+</style>
+
+##"ToothGrowth Data Analysis"
+###1. Load the ToothGrowth data and perform some basic exploratory data analyses
+```{r q1, message=FALSE, warning=FALSE, echo = TRUE}
+library(reshape2); library(stats); library(ggplot2); library(gridExtra)
+data(ToothGrowth); dTG = ToothGrowth
+dTG$dose = as.factor(dTG$dose); dTG$supp = as.factor(dTG$supp)
+```
+
+###2. Provide a basic summary of the data.
+
+####Exploratory Analysis and Basic Summary of Data
+```{r q2, message=FALSE, warning=FALSE, fig.show='hold', fig.height=2, echo = TRUE, results='hold'}
+summary(dTG)
+p <- ggplot(dTG, aes(supp, len)) + ggtitle ("Toothgrowth by Supplement Type") + xlab("Supplement Type") + ylab("Tooth length") + geom_boxplot()
+q <- ggplot(dTG, aes(dose, len)) + ggtitle ("Toothgrowth by Dose(mg)") + xlab("Dose Type") + ylab("Tooth length") + geom_boxplot()
+grid.arrange(p, q, ncol=2)
+```
+
+###3. Use confidence intervals and hypothesis tests to compare tooth growth by supp and dose
+
+####Ttest comparing tooth growth by Supp
+```{r q3_1, message=FALSE, warning=FALSE, results='hold', echo = TRUE}
+t.test(len ~ supp, paired = FALSE, var.equal = FALSE, data = dTG)
+```
+
+####Ttest comparing tooth growth by Dose
+
+#####Comparing Tooth Growth with Dose(0.5,1)
+```{r q3_2, message=FALSE, warning=FALSE, echo = TRUE}
+dTG1 = subset(dTG, dose %in% c(0.5, 1))
+t.test(len ~ dose, paired = FALSE, var.equal = FALSE, data = dTG1)
+```
+
+#####Comparing Tooth Growth with Dose(0.5,2)
+```{r q3_3, message=FALSE, warning=FALSE, echo = TRUE}
+dTG2 = subset(dTG, dose %in% c(0.5, 2))
+t.test(len ~ dose, paired = FALSE, var.equal = FALSE, data = dTG2)
+```
+
+#####Comparing Tooth Growth with Dose(1,2)
+```{r q3_4, message=FALSE, warning=FALSE, echo = TRUE}
+dTG3 = subset(dTG, dose %in% c(1, 2))
+t.test(len ~ dose, paired = FALSE, var.equal = FALSE, data = dTG3)
+```
+###4. State your conclusions and the assumptions needed for your conclusions.
+
+The tests assume that there are 10 guinea pigs in each of the 2X3 treatment conditions. So compared as independent groups. Data is assumed to be iid normal.Due to lack of information, variance is assumed to be unequal. From the Supplement Ttest, the true difference in means is not equal. From the confidence interval on pairwise comparison of dose, none of it includes 0, indicating the mean of group 0.5 is less than the mean of group 1, which in turn is less than the mean of group 2.
