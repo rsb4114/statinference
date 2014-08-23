@@ -26,12 +26,12 @@ print(paste("Theoritical variance = ", round (varexp,3), " and Estimate of varia
 shist <- hist(samplemeans)
 ```
 ```{r q3part2, message=FALSE, warning=FALSE}
+#plot the normal on top of histogram. Ref: http://stackoverflow.com/
 par(mfrow = c(1, 2))
 multiplier <- shist$counts / shist$density
 sdensity <- density(samplemeans); sdensity$y <- sdensity$y * multiplier[1]
 plot(shist, main = "Histogram of Sample Means", xlab = "Sample Mean")
 lines(x=c(smean, smean), y = c(0, max(shist$counts)), col = "brown", lwd = 4)
-#plot the normal on top of histogram
 sx <- seq(min(samplemeans), max(samplemeans), length.out= 100); normal <- dnorm(x = sx, mean = smean, sd = ssd); lines(sx, normal * multiplier[1], col = "blue", lwd = 2)
 ## Plot using a qqplot
 qqnorm(samplemeans); qqline(samplemeans, col = 2)
